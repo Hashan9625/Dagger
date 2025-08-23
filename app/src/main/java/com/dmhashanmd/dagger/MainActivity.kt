@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dmhashanmd.dagger.binds.BindsInterface
+import com.dmhashanmd.dagger.model.Car
 import com.dmhashanmd.dagger.model.Engine
 import com.dmhashanmd.dagger.ui.theme.DaggerTheme
 import com.dmhashanmd.dagger.viewmodel.MainViewModel
@@ -31,6 +32,9 @@ class MainActivity : ComponentActivity() {
 
     @Inject lateinit var bindsInterface: BindsInterface
 
+    @Inject
+    lateinit var car: Car
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -41,7 +45,8 @@ class MainActivity : ComponentActivity() {
                     Greeting(
                         name = engine.name,
                         modifier = Modifier.padding(innerPadding),
-                        bindsInterface.hello()
+                        bindsInterface.hello(),
+                        car.engine.name
                     )
                 }
             }
@@ -50,7 +55,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier, hello: String) {
+fun Greeting(name: String, modifier: Modifier = Modifier, hello: String, contructerInject: String) {
     val viewModel = hiltViewModel<MainViewModel>()
     val transmission by viewModel._transmission.collectAsState()
 
@@ -87,6 +92,6 @@ fun Greeting(name: String, modifier: Modifier = Modifier, hello: String) {
 @Composable
 fun GreetingPreview() {
     DaggerTheme {
-        Greeting("Android", hello = "bind")
+        Greeting("Android", hello = "bind", contructerInject = "Construct")
     }
 }
