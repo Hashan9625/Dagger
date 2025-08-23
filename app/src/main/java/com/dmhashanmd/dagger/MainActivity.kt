@@ -12,12 +12,16 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.dmhashanmd.dagger.binds.BindsInterface
 import com.dmhashanmd.dagger.model.Engine
 import com.dmhashanmd.dagger.ui.theme.DaggerTheme
+import com.dmhashanmd.dagger.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -31,6 +35,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+
             DaggerTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Greeting(
@@ -46,6 +51,9 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier, hello: String) {
+    val viewModel = hiltViewModel<MainViewModel>()
+    val transmission by viewModel._transmission.collectAsState()
+
     Column(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -58,6 +66,11 @@ fun Greeting(name: String, modifier: Modifier = Modifier, hello: String) {
 
         Text(
             text = hello,
+            modifier = modifier
+        )
+
+        Text(
+            text = transmission.name,
             modifier = modifier
         )
         Button({
