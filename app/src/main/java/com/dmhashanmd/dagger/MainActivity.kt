@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dmhashanmd.dagger.binds.BindsInterface
+import com.dmhashanmd.dagger.contentProvider.CustomContentProvider
 import com.dmhashanmd.dagger.model.Car
 import com.dmhashanmd.dagger.model.Engine
 import com.dmhashanmd.dagger.ui.theme.DaggerTheme
@@ -42,6 +43,9 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        contentResolver.query(CustomContentProvider.CONTENT_URI, null, null, null)
+
         enableEdgeToEdge()
         setContent {
 
