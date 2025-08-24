@@ -78,6 +78,10 @@ fun Greeting(name: String, modifier: Modifier = Modifier, hello: String, contruc
             text = transmission.name,
             modifier = modifier
         )
+        Text(
+            text = "Construct inject: $contructerInject",
+            modifier = modifier
+        )
         Button({
 
         }){
