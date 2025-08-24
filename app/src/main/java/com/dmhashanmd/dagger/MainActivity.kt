@@ -41,6 +41,9 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var assistedInterface: AssistedViewModel.AssistedViewModelInterface
 
+    @Inject
+    lateinit var setString: Set<String>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -59,7 +62,8 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier.padding(innerPadding),
                         bindsInterface.hello(),
                         car.engine.name,
-                        assistedViewModel.userId
+                        assistedViewModel.userId,
+                        setString.joinToString()
                     )
                 }
             }
@@ -73,7 +77,8 @@ fun Greeting(
     modifier: Modifier = Modifier,
     hello: String,
     contructerInject: String,
-    userId: String
+    userId: String,
+    joinToString: String
 ) {
     val viewModel = hiltViewModel<MainViewModel>()
     val transmission by viewModel._transmission.collectAsState()
@@ -106,6 +111,10 @@ fun Greeting(
             text = "userId: $userId",
             modifier = modifier
         )
+        Text(
+            text = "first and second: $joinToString",
+            modifier = modifier
+        )
         Button({
 
         }){
@@ -124,7 +133,8 @@ fun GreetingPreview() {
             "Android",
             hello = "bind",
             contructerInject = "Construct",
-            userId = "hashan"
+            userId = "hashan",
+            joinToString = "setString.joinToString()"
         )
     }
 }
