@@ -44,6 +44,9 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var setString: Set<String>
 
+    @Inject
+    lateinit var intoMapString: Map<String, String>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -63,7 +66,8 @@ class MainActivity : ComponentActivity() {
                         bindsInterface.hello(),
                         car.engine.name,
                         assistedViewModel.userId,
-                        setString.joinToString()
+                        setString.joinToString(),
+                        intoMapString.values.joinToString()
                     )
                 }
             }
@@ -78,7 +82,8 @@ fun Greeting(
     hello: String,
     contructerInject: String,
     userId: String,
-    joinToString: String
+    joinToString: String,
+    joinToStringMap: String
 ) {
     val viewModel = hiltViewModel<MainViewModel>()
     val transmission by viewModel._transmission.collectAsState()
@@ -115,11 +120,11 @@ fun Greeting(
             text = "first and second: $joinToString",
             modifier = modifier
         )
-        Button({
 
-        }){
-            Text(text = "Click Me")
-        }
+        Text(
+            text = "Map: $joinToStringMap",
+            modifier = modifier
+        )
     }
 
 }
@@ -134,7 +139,8 @@ fun GreetingPreview() {
             hello = "bind",
             contructerInject = "Construct",
             userId = "hashan",
-            joinToString = "setString.joinToString()"
+            joinToString = "setString.joinToString()",
+            joinToStringMap = "intoMapString.values.joinToString()"
         )
     }
 }
