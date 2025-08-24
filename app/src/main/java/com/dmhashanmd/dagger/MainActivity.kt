@@ -22,31 +22,40 @@ import com.dmhashanmd.dagger.binds.BindsInterface
 import com.dmhashanmd.dagger.model.Car
 import com.dmhashanmd.dagger.model.Engine
 import com.dmhashanmd.dagger.ui.theme.DaggerTheme
+import com.dmhashanmd.dagger.viewmodel.AssistedViewModel
 import com.dmhashanmd.dagger.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
+import javax.inject.Provider
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    @Inject lateinit var engine: Engine
+    @Inject lateinit var engine: Provider<Engine>
 
     @Inject lateinit var bindsInterface: BindsInterface
 
     @Inject
     lateinit var car: Car
 
+    @Inject
+    lateinit var assistedInterface: AssistedViewModel.AssistedViewModelInterface
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
 
+            val assistedViewModel = assistedInterface.create("hashan")
+            val uiState by assistedViewModel.uiState.collectAsState()
+
             DaggerTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Greeting(
-                        name = engine.name,
+                        name = engine.get().name,
                         modifier = Modifier.padding(innerPadding),
                         bindsInterface.hello(),
-                        car.engine.name
+                        car.engine.name,
+                        assistedViewModel.userId
                     )
                 }
             }
@@ -55,7 +64,13 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier, hello: String, contructerInject: String) {
+fun Greeting(
+    name: String,
+    modifier: Modifier = Modifier,
+    hello: String,
+    contructerInject: String,
+    userId: String
+) {
     val viewModel = hiltViewModel<MainViewModel>()
     val transmission by viewModel._transmission.collectAsState()
 
@@ -82,6 +97,11 @@ fun Greeting(name: String, modifier: Modifier = Modifier, hello: String, contruc
             text = "Construct inject: $contructerInject",
             modifier = modifier
         )
+
+        Text(
+            text = "userId: $userId",
+            modifier = modifier
+        )
         Button({
 
         }){
@@ -96,6 +116,11 @@ fun Greeting(name: String, modifier: Modifier = Modifier, hello: String, contruc
 @Composable
 fun GreetingPreview() {
     DaggerTheme {
-        Greeting("Android", hello = "bind", contructerInject = "Construct")
+        Greeting(
+            "Android",
+            hello = "bind",
+            contructerInject = "Construct",
+            userId = "hashan"
+        )
     }
 }
