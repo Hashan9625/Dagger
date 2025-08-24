@@ -12,6 +12,7 @@ import android.util.Log
 import com.dmhashanmd.dagger.BaseApplication
 import com.dmhashanmd.dagger.db.MyDatabaseHelper
 import com.dmhashanmd.dagger.model.Engine
+import dagger.hilt.android.EntryPointAccessors
 import javax.inject.Inject
 
 
@@ -46,7 +47,10 @@ class CustomContentProvider : ContentProvider() {
             .create()
             .inject(this)
 
-        Log.d("CustomContentProvider", "onCreate: ${engine.name}")
+        val entryPoint = EntryPointAccessors.fromApplication(context!!, EntryPointMethod::class.java)
+
+        Log.d("CustomContentProvider", "sub Perent : ${engine.name}")
+        Log.d("CustomContentProvider", "entryPoint: ${entryPoint.getEngine().name}")
         return true
     }
 
